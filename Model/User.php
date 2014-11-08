@@ -25,21 +25,25 @@ abstract class User implements UserInterface, GroupableInterface
     protected $id;
 
     /**
+     * Username stored exactly as entered
      * @var string
      */
     protected $username;
 
     /**
+     * Username converted into all lowercase for searching/indexing etc.
      * @var string
      */
     protected $usernameCanonical;
 
     /**
+     * Email exactly as entered by the user
      * @var string
      */
     protected $email;
 
     /**
+     * Email converted into all lowercase for searching/indexing etc.
      * @var string
      */
     protected $emailCanonical;
@@ -88,7 +92,7 @@ abstract class User implements UserInterface, GroupableInterface
     protected $passwordRequestedAt;
 
     /**
-     * @var Collection
+     * @var ArrayCollection
      */
     protected $groups;
 
@@ -110,7 +114,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * @var array
      */
-    protected $roles;
+    protected $roles = array();
 
     /**
      * @var boolean
@@ -132,6 +136,11 @@ abstract class User implements UserInterface, GroupableInterface
         $this->credentialsExpired = false;
     }
 
+    /**
+     * 
+     * @param string $role
+     * @return User
+     */
     public function addRole($role)
     {
         $role = strtoupper($role);
@@ -211,26 +220,46 @@ abstract class User implements UserInterface, GroupableInterface
         return $this->id;
     }
 
+    /**
+     * 
+     * @return sting
+     */
     public function getUsername()
     {
         return $this->username;
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function getUsernameCanonical()
     {
         return $this->usernameCanonical;
     }
 
+    /**
+     * 
+     * @return sting
+     */
     public function getSalt()
     {
         return $this->salt;
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function getEmail()
     {
         return $this->email;
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function getEmailCanonical()
     {
         return $this->emailCanonical;
@@ -246,6 +275,10 @@ abstract class User implements UserInterface, GroupableInterface
         return $this->password;
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function getPlainPassword()
     {
         return $this->plainPassword;
@@ -261,6 +294,10 @@ abstract class User implements UserInterface, GroupableInterface
         return $this->lastLogin;
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function getConfirmationToken()
     {
         return $this->confirmationToken;
@@ -269,7 +306,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * Returns the user roles
      *
-     * @return array The roles
+     * @return string[] The roles
      */
     public function getRoles()
     {
@@ -302,6 +339,10 @@ abstract class User implements UserInterface, GroupableInterface
         return in_array(strtoupper($role), $this->getRoles(), true);
     }
 
+    /**
+     * 
+     * @return boolean
+     */
     public function isAccountNonExpired()
     {
         if (true === $this->expired) {
@@ -315,11 +356,19 @@ abstract class User implements UserInterface, GroupableInterface
         return true;
     }
 
+    /**
+     * 
+     * @return boolean
+     */
     public function isAccountNonLocked()
     {
-        return !$this->locked;
+        return ! $this->locked;
     }
 
+    /**
+     * 
+     * @return boolean
+     */
     public function isCredentialsNonExpired()
     {
         if (true === $this->credentialsExpired) {
@@ -333,31 +382,56 @@ abstract class User implements UserInterface, GroupableInterface
         return true;
     }
 
+    /**
+     * 
+     * @return boolean
+     */
     public function isCredentialsExpired()
     {
-        return !$this->isCredentialsNonExpired();
+        return ! $this->isCredentialsNonExpired();
     }
 
+    /**
+     * 
+     * @return boolean
+     */
     public function isEnabled()
     {
         return $this->enabled;
     }
 
+    /**
+     * 
+     * @return boolean
+     */
     public function isExpired()
     {
-        return !$this->isAccountNonExpired();
+        return ! $this->isAccountNonExpired();
     }
 
+    /**
+     * 
+     * @return boolean
+     */
     public function isLocked()
     {
-        return !$this->isAccountNonLocked();
+        return ! $this->isAccountNonLocked();
     }
 
+    /**
+     * 
+     * @return boolean
+     */
     public function isSuperAdmin()
     {
         return $this->hasRole(static::ROLE_SUPER_ADMIN);
     }
 
+    /**
+     * 
+     * @param string $role
+     * @return User
+     */
     public function removeRole($role)
     {
         if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
@@ -368,6 +442,11 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * 
+     * @param string $username
+     * @return User
+     */
     public function setUsername($username)
     {
         $this->username = $username;
@@ -375,6 +454,11 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * 
+     * @param string $usernameCanonical
+     * @return User
+     */
     public function setUsernameCanonical($usernameCanonical)
     {
         $this->usernameCanonical = $usernameCanonical;
@@ -453,6 +537,11 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * 
+     * @param string $password
+     * @return User
+     */
     public function setPassword($password)
     {
         $this->password = $password;
@@ -460,6 +549,11 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * 
+     * @param boolean $boolean
+     * @return User
+     */
     public function setSuperAdmin($boolean)
     {
         if (true === $boolean) {
@@ -471,6 +565,11 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * 
+     * @param string $password
+     * @return User
+     */
     public function setPlainPassword($password)
     {
         $this->plainPassword = $password;
@@ -478,6 +577,11 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * 
+     * @param \DateTime $time
+     * @return User
+     */
     public function setLastLogin(\DateTime $time = null)
     {
         $this->lastLogin = $time;
@@ -485,6 +589,11 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * 
+     * @param boolean $boolean
+     * @return User
+     */
     public function setLocked($boolean)
     {
         $this->locked = $boolean;
@@ -492,6 +601,11 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * 
+     * @param string $confirmationToken
+     * @return User
+     */
     public function setConfirmationToken($confirmationToken)
     {
         $this->confirmationToken = $confirmationToken;
@@ -499,6 +613,11 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * 
+     * @param \DateTime $date
+     * @return User
+     */
     public function setPasswordRequestedAt(\DateTime $date = null)
     {
         $this->passwordRequestedAt = $date;
@@ -516,12 +635,22 @@ abstract class User implements UserInterface, GroupableInterface
         return $this->passwordRequestedAt;
     }
 
+    /**
+     * 
+     * @param int $ttl
+     * @return boolean
+     */
     public function isPasswordRequestNonExpired($ttl)
     {
         return $this->getPasswordRequestedAt() instanceof \DateTime &&
                $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
     }
 
+    /**
+     * 
+     * @param array $roles
+     * @return User
+     */
     public function setRoles(array $roles)
     {
         $this->roles = array();
@@ -536,13 +665,17 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * Gets the groups granted to the user.
      *
-     * @return Collection
+     * @return ArrayCollection
      */
     public function getGroups()
     {
         return $this->groups ?: $this->groups = new ArrayCollection();
     }
 
+    /**
+     * 
+     * @return string[]
+     */
     public function getGroupNames()
     {
         $names = array();
@@ -563,6 +696,11 @@ abstract class User implements UserInterface, GroupableInterface
         return in_array($name, $this->getGroupNames());
     }
 
+    /**
+     * 
+     * @param GroupInterface $group
+     * @return User
+     */
     public function addGroup(GroupInterface $group)
     {
         if (!$this->getGroups()->contains($group)) {
@@ -572,6 +710,11 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * 
+     * @param GroupInterface $group
+     * @return User
+     */
     public function removeGroup(GroupInterface $group)
     {
         if ($this->getGroups()->contains($group)) {
@@ -581,6 +724,10 @@ abstract class User implements UserInterface, GroupableInterface
         return $this;
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function __toString()
     {
         return (string) $this->getUsername();
