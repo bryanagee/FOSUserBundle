@@ -19,10 +19,10 @@ class UserManipulatorTest extends \PHPUnit_Framework_TestCase
     
     public static function rolesProvider()
     {
-        return [
-            ['ROLE_ADMIN'],
-            ['ROLE_SOME_NEW_ROLE'],
-        ];
+        return array(
+            array('ROLE_ADMIN'),
+            array('ROLE_SOME_NEW_ROLE'),
+        );
     }
     
     public function testCreate()
