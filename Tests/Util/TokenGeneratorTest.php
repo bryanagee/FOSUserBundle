@@ -3,7 +3,6 @@
 namespace FOS\UserBundle\Tests\Util;
 
 use FOS\UserBundle\Util\TokenGenerator;
-use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 /**
@@ -39,6 +38,8 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
     
     public function testGetToken()
     {
+        // We want to run the generator a few times to make sure that we don't
+        // get duplicates
         $iterations = 200;
         $tokens = array();
         for($i = 0; $i < $iterations; $i++) {
@@ -54,6 +55,12 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testGetTokenWithoutLogger()
     {
         $this->tokenGenerator = new TokenGenerator();
+        $this->testGetToken();
+    }
+    
+    public function testGetTokenWithoutOpenSSL()
+    {
+        $this->tokenGenerator->disableOpenSsl();
         $this->testGetToken();
     }
 }
