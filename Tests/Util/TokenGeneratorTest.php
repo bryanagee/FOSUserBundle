@@ -15,7 +15,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
     
     /**
      *
-     * @var Psr\Log\LoggerInterface
+     * @var \Psr\Logger\LoggerInterface
      */
     private $logger;
     
@@ -48,8 +48,8 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
             $tokens[] = $token;
         }
         
-        $token = array_unique($tokens);
-        $this->assertEquals(sizeof($tokens), $iterations);
+        $uniqueTokens = array_unique($tokens);
+        $this->assertEquals(sizeof($uniqueTokens), $iterations);
     }
     
     public function testGetTokenWithoutLogger()
