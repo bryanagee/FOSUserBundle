@@ -83,23 +83,30 @@ class LoginManager implements LoginManagerInterface
         $token = $this->createToken($firewallName, $user);
 
         if ($this->container->isScopeActive('request')) {
-            $this->sessionStrategy->onAuthentication($this->container->get('request'), $token);
-
-            if (null !== $response) {
-                $rememberMeServices = null;
-                if ($this->container->has('security.authentication.rememberme.services.persistent.'.$firewallName)) {
-                    $rememberMeServices = $this->container->get('security.authentication.rememberme.services.persistent.'.$firewallName);
-                } elseif ($this->container->has('security.authentication.rememberme.services.simplehash.'.$firewallName)) {
-                    $rememberMeServices = $this->container->get('security.authentication.rememberme.services.simplehash.'.$firewallName);
-                }
-
-                if ($rememberMeServices instanceof RememberMeServicesInterface) {
-                    $rememberMeServices->loginSuccess($this->container->get('request'), $response, $token);
-                }
-            }
+            $this->handleRequestScope($response, $token, $firewallName);
         }
 
         $this->securityContext->setToken($token);
+    }
+    
+    private function handleRequestScope($response, $token, $firewallName)
+    {
+        $this->sessionStrategy->onAuthentication($this->container->get('request'), $token);
+
+        if (null === $response) {
+            return;
+        }
+        
+        $rememberMeServices = null;
+        if ($this->container->has('security.authentication.rememberme.services.persistent.'.$firewallName)) {
+            $rememberMeServices = $this->container->get('security.authentication.rememberme.services.persistent.'.$firewallName);
+        } elseif ($this->container->has('security.authentication.rememberme.services.simplehash.'.$firewallName)) {
+            $rememberMeServices = $this->container->get('security.authentication.rememberme.services.simplehash.'.$firewallName);
+        }
+
+        if ($rememberMeServices instanceof RememberMeServicesInterface) {
+            $rememberMeServices->loginSuccess($this->container->get('request'), $response, $token);
+        }
     }
 
     /**
