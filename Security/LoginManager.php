@@ -106,6 +106,7 @@ class LoginManager implements LoginManagerInterface
      * 
      * @param string $firewall
      * @param UserInterface $user
+     * 
      * @return UsernamePasswordToken
      */
     protected function createToken($firewall, UserInterface $user)
