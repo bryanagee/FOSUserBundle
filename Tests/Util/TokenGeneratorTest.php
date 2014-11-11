@@ -14,7 +14,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      *
-     * @var \Psr\Logger\LoggerInterface
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
     
