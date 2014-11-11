@@ -70,7 +70,7 @@ abstract class Group implements GroupInterface
 
     /**
      * 
-     * @return atring[]
+     * @return string[]
      */
     public function getRoles()
     {

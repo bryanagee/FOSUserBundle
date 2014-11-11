@@ -362,7 +362,7 @@ abstract class User implements UserInterface, GroupableInterface
      */
     public function isAccountNonLocked()
     {
-        return ! $this->locked;
+        return !$this->locked;
     }
 
     /**
@@ -430,6 +430,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param string $role
+     * 
      * @return User
      */
     public function removeRole($role)
@@ -445,6 +446,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param string $username
+     * 
      * @return User
      */
     public function setUsername($username)
@@ -457,6 +459,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param string $usernameCanonical
+     * 
      * @return User
      */
     public function setUsernameCanonical($usernameCanonical)
@@ -540,6 +543,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param string $password
+     * 
      * @return User
      */
     public function setPassword($password)
@@ -552,6 +556,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param boolean $boolean
+     * 
      * @return User
      */
     public function setSuperAdmin($boolean)
@@ -568,6 +573,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param string $password
+     * 
      * @return User
      */
     public function setPlainPassword($password)
@@ -580,7 +586,8 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param \DateTime $time
-     * @return User
+     *
+     *  @return User
      */
     public function setLastLogin(\DateTime $time = null)
     {
@@ -592,6 +599,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param boolean $boolean
+     * 
      * @return User
      */
     public function setLocked($boolean)
@@ -604,6 +612,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param string $confirmationToken
+     * 
      * @return User
      */
     public function setConfirmationToken($confirmationToken)
@@ -616,6 +625,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param \DateTime $date
+     * 
      * @return User
      */
     public function setPasswordRequestedAt(\DateTime $date = null)
@@ -638,6 +648,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param int $ttl
+     * 
      * @return boolean
      */
     public function isPasswordRequestNonExpired($ttl)
@@ -649,6 +660,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param array $roles
+     * 
      * @return User
      */
     public function setRoles(array $roles)
@@ -699,6 +711,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param GroupInterface $group
+     * 
      * @return User
      */
     public function addGroup(GroupInterface $group)
@@ -713,6 +726,7 @@ abstract class User implements UserInterface, GroupableInterface
     /**
      * 
      * @param GroupInterface $group
+     * 
      * @return User
      */
     public function removeGroup(GroupInterface $group)
