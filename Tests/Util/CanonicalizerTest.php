@@ -11,7 +11,6 @@ use FOS\UserBundle\Util\Canonicalizer;
  */
 class CanonicalizerTest extends \PHPUnit_Framework_TestCase
 {
-    
     /**
      *
      * @var Canonicalizer

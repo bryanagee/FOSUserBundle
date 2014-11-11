@@ -42,7 +42,7 @@ class UserListener extends AbstractUserListener
     public function prePersist($args)
     {
         $object = $args->getEntity();
-        if ( ! $object instanceof UserInterface) {
+        if (!$object instanceof UserInterface) {
             return;
         }
         $this->updateUserFields($object);
@@ -54,7 +54,7 @@ class UserListener extends AbstractUserListener
     public function preUpdate($args)
     {
         $object = $args->getEntity();
-        if ( ! $object instanceof UserInterface) {
+        if (!$object instanceof UserInterface) {
             return;
         }
 

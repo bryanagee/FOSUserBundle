@@ -29,14 +29,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class ChangePasswordController extends Controller
 {
-
     /**
      * Change user password
      */
     public function changePasswordAction(Request $request)
     {
         $user = $this->getUser();
-        if (!is_object($user) || ! $user instanceof UserInterface) {
+        if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 

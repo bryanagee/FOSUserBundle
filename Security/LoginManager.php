@@ -62,8 +62,8 @@ class LoginManager implements LoginManagerInterface
             SecurityContextInterface $context, 
             UserCheckerInterface $userChecker,
             SessionAuthenticationStrategyInterface $sessionStrategy,
-            ContainerInterface $container)
-    {
+            ContainerInterface $container
+    ) {
         $this->securityContext = $context;
         $this->userChecker = $userChecker;
         $this->sessionStrategy = $sessionStrategy;

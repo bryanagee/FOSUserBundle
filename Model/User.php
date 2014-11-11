@@ -388,7 +388,7 @@ abstract class User implements UserInterface, GroupableInterface
      */
     public function isCredentialsExpired()
     {
-        return ! $this->isCredentialsNonExpired();
+        return !$this->isCredentialsNonExpired();
     }
 
     /**
@@ -406,7 +406,7 @@ abstract class User implements UserInterface, GroupableInterface
      */
     public function isExpired()
     {
-        return ! $this->isAccountNonExpired();
+        return !$this->isAccountNonExpired();
     }
 
     /**
@@ -415,7 +415,7 @@ abstract class User implements UserInterface, GroupableInterface
      */
     public function isLocked()
     {
-        return ! $this->isAccountNonLocked();
+        return !$this->isAccountNonLocked();
     }
 
     /**

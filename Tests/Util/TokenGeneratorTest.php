@@ -12,7 +12,6 @@ use Psr\Log\NullLogger;
  */
 class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    
     /**
      *
      * @var \Psr\Logger\LoggerInterface
