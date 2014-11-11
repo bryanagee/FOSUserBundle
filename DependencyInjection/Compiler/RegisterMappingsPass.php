@@ -64,11 +64,13 @@ class RegisterMappingsPass implements CompilerPassInterface
     protected function getChainDriverServiceName(ContainerBuilder $container)
     {
         foreach (array('fos_user.model_manager_name', $this->fallbackManagerParameter) as $param) {
-            if ($container->hasParameter($param)) {
-                $name = $container->getParameter($param);
-                if ($name) {
-                    return sprintf($this->driverPattern, $name);
-                }
+            if ( ! $container->hasParameter($param)) {
+                continue;
+            }
+            
+            $name = $container->getParameter($param);
+            if ($name) {
+                return sprintf($this->driverPattern, $name);
             }
         }
 
