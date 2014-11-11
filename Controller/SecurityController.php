@@ -23,14 +23,13 @@ class SecurityController extends Controller
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
 
+        $error = null;
         // get the error if any (works with forward and redirect -- see below)
         if ($request->attributes->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
             $error = $request->attributes->get(SecurityContextInterface::AUTHENTICATION_ERROR);
         } elseif (null !== $session && $session->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
             $error = $session->get(SecurityContextInterface::AUTHENTICATION_ERROR);
             $session->remove(SecurityContextInterface::AUTHENTICATION_ERROR);
-        } else {
-            $error = null;
         }
 
         if (!$error instanceof AuthenticationException) {
@@ -40,14 +39,13 @@ class SecurityController extends Controller
         // last username entered by the user
         $lastUsername = (null === $session) ? '' : $session->get(SecurityContextInterface::LAST_USERNAME);
 
-        $csrfToken = $this->has('form.csrf_provider')
-            ? $this->get('form.csrf_provider')->generateCsrfToken('authenticate')
-            : null;
+        $csrfToken = ! $this->has('form.csrf_provider') ? null
+            : $this->get('form.csrf_provider')->generateCsrfToken('authenticate');
 
         return $this->renderLogin(array(
             'last_username' => $lastUsername,
             'error'         => $error,
-            'csrf_token' => $csrfToken,
+            'csrf_token'    => $csrfToken,
         ));
     }
 

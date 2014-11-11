@@ -33,10 +33,7 @@ class ProfileController extends Controller
      */
     public function showAction()
     {
-        $user = $this->getUser();
-        if (!is_object($user) || !$user instanceof UserInterface) {
-            throw new AccessDeniedException('This user does not have access to this section.');
-        }
+        $user = $this->getValidUser();
 
         return $this->render('FOSUserBundle:Profile:show.html.twig', array(
             'user' => $user
@@ -48,10 +45,7 @@ class ProfileController extends Controller
      */
     public function editAction(Request $request)
     {
-        $user = $this->getUser();
-        if (!is_object($user) || !$user instanceof UserInterface) {
-            throw new AccessDeniedException('This user does not have access to this section.');
-        }
+        $user = $this->getValidUser();
 
         /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
         $dispatcher = $this->get('event_dispatcher');
@@ -72,26 +66,44 @@ class ProfileController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
-            $userManager = $this->get('fos_user.user_manager');
-
-            $event = new FormEvent($form, $request);
-            $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
-
-            $userManager->updateUser($user);
-
-            if (null === $response = $event->getResponse()) {
-                $url = $this->generateUrl('fos_user_profile_show');
-                $response = new RedirectResponse($url);
-            }
-
-            $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
-
-            return $response;
+            return $this->processEditForm($form, $request, $dispatcher, $user);
         }
 
         return $this->render('FOSUserBundle:Profile:edit.html.twig', array(
             'form' => $form->createView()
         ));
     }
+        
+    private function processEditForm($form, $request, $dispatcher, $user)
+    { /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
+
+        $event = new FormEvent($form, $request);
+        $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
+
+        $userManager->updateUser($user);
+
+        if (null === $response = $event->getResponse()) {
+            $url      = $this->generateUrl('fos_user_profile_show');
+            $response = new RedirectResponse($url);
+        }
+
+        $dispatcher->dispatch(
+                FOSUserEvents::PROFILE_EDIT_COMPLETED,
+                new FilterUserResponseEvent($user, $request, $response)
+            );
+
+        return $response;
+    }
+    
+    private function getValidUser()
+    { 
+        $user = $this->getUser();
+        if ( ! is_object($user) || ! ($user instanceof UserInterface)) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        }
+        
+        return $user;
+    }
+
 }

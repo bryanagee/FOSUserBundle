@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the FOSUserBundle package.
  *
@@ -40,11 +39,8 @@ class ChangePasswordController extends Controller
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 
-        /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
-        $dispatcher = $this->get('event_dispatcher');
-
         $event = new GetResponseUserEvent($user, $request);
-        $dispatcher->dispatch(FOSUserEvents::CHANGE_PASSWORD_INITIALIZE, $event);
+        $this->get('event_dispatcher')->dispatch(FOSUserEvents::CHANGE_PASSWORD_INITIALIZE, $event);
 
         if (null !== $event->getResponse()) {
             return $event->getResponse();
@@ -59,26 +55,44 @@ class ChangePasswordController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
-            $userManager = $this->get('fos_user.user_manager');
-
-            $event = new FormEvent($form, $request);
-            $dispatcher->dispatch(FOSUserEvents::CHANGE_PASSWORD_SUCCESS, $event);
-
-            $userManager->updateUser($user);
-
-            if (null === $response = $event->getResponse()) {
-                $url = $this->generateUrl('fos_user_profile_show');
-                $response = new RedirectResponse($url);
-            }
-
-            $dispatcher->dispatch(FOSUserEvents::CHANGE_PASSWORD_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
-
-            return $response;
+            return $this->processChangePasswordForm($form, $request);
         }
 
         return $this->render('FOSUserBundle:ChangePassword:changePassword.html.twig', array(
-            'form' => $form->createView()
+                    'form' => $form->createView()
         ));
     }
+
+    /**
+     * 
+     * @param type $form
+     * @param type $request
+     * @return RedirectResponse|Response
+     */
+    private function processChangePasswordForm(
+             $form, $request)
+    {
+        $dispatcher  = $this->get('event_dispatcher');
+        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
+
+        $event = new FormEvent($form, $request);
+        $dispatcher->dispatch(FOSUserEvents::CHANGE_PASSWORD_SUCCESS, $event);
+
+        $userManager->updateUser($this->getUser());
+
+        if (null === $response = $event->getResponse()) {
+            $url      = $this->generateUrl('fos_user_profile_show');
+            $response = new RedirectResponse($url);
+        }
+
+        $dispatcher->dispatch(
+                FOSUserEvents::CHANGE_PASSWORD_COMPLETED,
+                new FilterUserResponseEvent($user, $request,
+                $response
+            ));
+
+        return $response;
+    }
+
 }

@@ -79,28 +79,33 @@ class GroupController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            /** @var $groupManager \FOS\UserBundle\Model\GroupManagerInterface */
-            $groupManager = $this->get('fos_user.group_manager');
-
-            $event = new FormEvent($form, $request);
-            $dispatcher->dispatch(FOSUserEvents::GROUP_EDIT_SUCCESS, $event);
-
-            $groupManager->updateGroup($group);
-
-            if (null === $response = $event->getResponse()) {
-                $url = $this->generateUrl('fos_user_group_show', array('groupName' => $group->getName()));
-                $response = new RedirectResponse($url);
-            }
-
-            $dispatcher->dispatch(FOSUserEvents::GROUP_EDIT_COMPLETED, new FilterGroupResponseEvent($group, $request, $response));
-
-            return $response;
+            return $this->processEditForm($form, $request, $group, $dispatcher);
         }
 
         return $this->render('FOSUserBundle:Group:edit.html.twig', array(
             'form'      => $form->createview(),
             'group_name'  => $group->getName(),
         ));
+    }
+    
+    private function processEditForm($form, $request, $group, $dispatcher)
+    {
+        /** @var $groupManager \FOS\UserBundle\Model\GroupManagerInterface */
+        $groupManager = $this->get('fos_user.group_manager');
+
+        $event = new FormEvent($form, $request);
+        $dispatcher->dispatch(FOSUserEvents::GROUP_EDIT_SUCCESS, $event);
+
+        $groupManager->updateGroup($group);
+
+        if (null === $response = $event->getResponse()) {
+            $url = $this->generateUrl('fos_user_group_show', array('groupName' => $group->getName()));
+            $response = new RedirectResponse($url);
+        }
+
+        $dispatcher->dispatch(FOSUserEvents::GROUP_EDIT_COMPLETED, new FilterGroupResponseEvent($group, $request, $response));
+
+        return $response;
     }
 
     /**
@@ -125,24 +130,32 @@ class GroupController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $event = new FormEvent($form, $request);
-            $dispatcher->dispatch(FOSUserEvents::GROUP_CREATE_SUCCESS, $event);
-
-            $groupManager->updateGroup($group);
-
-            if (null === $response = $event->getResponse()) {
-                $url = $this->generateUrl('fos_user_group_show', array('groupName' => $group->getName()));
-                $response = new RedirectResponse($url);
-            }
-
-            $dispatcher->dispatch(FOSUserEvents::GROUP_CREATE_COMPLETED, new FilterGroupResponseEvent($group, $request, $response));
-
-            return $response;
+            return $this->processNewForm($form, $request, $dispatcher, $groupManager);
         }
 
         return $this->render('FOSUserBundle:Group:new.html.twig', array(
             'form' => $form->createview(),
         ));
+    }
+    
+    private function processNewForm($form, $request, $dispatcher, $groupManager)
+    {
+        $event = new FormEvent($form, $request);
+        $dispatcher->dispatch(FOSUserEvents::GROUP_CREATE_SUCCESS, $event);
+
+        $groupManager->updateGroup($group);
+
+        if (null === $response = $event->getResponse()) {
+            $url = $this->generateUrl('fos_user_group_show', array('groupName' => $group->getName()));
+            $response = new RedirectResponse($url);
+        }
+
+        $dispatcher->dispatch(
+                FOSUserEvents::GROUP_CREATE_COMPLETED, 
+                new FilterGroupResponseEvent($group, $request, $response)
+            );
+
+        return $response;
     }
 
     /**
